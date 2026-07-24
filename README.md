@@ -62,3 +62,14 @@ Ver [ALEMBIC_GUIDE.md](ALEMBIC_GUIDE.md) para o fluxo completo.
 source .venv/bin/activate
 python -m src.seed
 ```
+
+## Testes
+
+Os testes rodam contra um banco SQLite temporário e isolado (recriado a cada teste),
+nunca tocam no Supabase. Ficam em `tests/`, um arquivo por entidade, cobrindo CRUD e as
+regras de negócio (limite de assentos, reserva duplicada, realocação, cascade delete).
+
+```bash
+source .venv/bin/activate
+pytest -v
+```

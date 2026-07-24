@@ -11,6 +11,7 @@ from src.use_cases.voo.get_ocupacao_voo import get_ocupacao_voo
 from src.use_cases.voo.get_voo import get_voo
 from src.use_cases.voo.list_passageiros_do_voo import list_passageiros_do_voo
 from src.use_cases.voo.list_voos import list_voos
+from src.use_cases.voo.notify_status_change import notify_status_change
 from src.use_cases.voo.update_voo import update_voo
 
 router = APIRouter(prefix="/voos", tags=["voos"])
@@ -33,7 +34,11 @@ def obter_voo(voo_id: int, db: Session = Depends(get_db)):
 
 @router.patch("/{voo_id}", response_model=voo_model.VooRead)
 def atualizar_voo(voo_id: int, dados: voo_model.VooUpdate, db: Session = Depends(get_db)):
-    return update_voo(VooRepository(db), voo_id, dados)
+    voo_repo = VooRepository(db)
+    status_anterior = get_voo(voo_repo, voo_id).status
+    voo = update_voo(voo_repo, voo_id, dados)
+    notify_status_change(ReservaRepository(db), voo, status_anterior)
+    return voo
 
 
 @router.delete("/{voo_id}", status_code=204)

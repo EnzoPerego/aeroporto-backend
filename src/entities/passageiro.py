@@ -14,4 +14,6 @@ class Passageiro(Base):
     documento: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     email: Mapped[Optional[str]] = mapped_column(String(150), nullable=True)
 
-    reservas: Mapped[list["Reserva"]] = relationship(back_populates="passageiro")
+    reservas: Mapped[list["Reserva"]] = relationship(
+        back_populates="passageiro", cascade="all, delete-orphan"
+    )

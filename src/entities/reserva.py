@@ -32,4 +32,6 @@ class Reserva(Base):
 
     passageiro: Mapped["Passageiro"] = relationship(back_populates="reservas")
     voo: Mapped["Voo"] = relationship(back_populates="reservas")
-    malas: Mapped[list["Mala"]] = relationship(back_populates="reserva")
+    malas: Mapped[list["Mala"]] = relationship(
+        back_populates="reserva", cascade="all, delete-orphan"
+    )
